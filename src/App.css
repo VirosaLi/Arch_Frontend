@@ -31,3 +31,10 @@
     transform: rotate(360deg);
   }
 }
+
+
+.datatable {
+  margin-top: 40px;
+  margin-left: 60px;
+  margin-right: 60px;
+}

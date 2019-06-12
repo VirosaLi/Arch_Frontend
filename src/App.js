@@ -6,89 +6,55 @@ import { Dropdown, DropdownButton, Table } from 'react-bootstrap';
 import facility from "./facility";
 
 class DataTable extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {data: []};
-    }
-
-    componentDidMount() {
-        facility.then(body => {
-            this.setState(body[this.props.index]);
-            //console.log(this.state.data)
-        });
-    }
-
     render() {
-        return (
-            <Table striped bordered hover>
+        if(this.props.facilitySelected >= 0) {
+            const object = this.props.data[this.props.facilitySelected];
+            const keys = Object.keys(object);
+            return <Table striped bordered hover size="sm">
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
+                    <th>{object["facility"]}</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td colSpan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+                {keys.map(o => {
+                    if (o !== "facility") {
+                        return (<tr>
+                            <td>{o}</td>
+                            <td>{object[o]}</td>
+                        </tr>)
+                    }
+                    else {
+                        return null;
+                    }
+                })}
                 </tbody>
-            </Table>
-        );
+            </Table>;
+        } else {
+            return(
+                <div></div>
+            );
+        }
     }
 }
 
 
 class DropdownList extends React.Component{
-
-    constructor(props) {
-        super(props);
-        this.state = {data: []};
-    }
-
-    componentDidMount() {
-        facility.then(body => {
-            this.setState(body);
-            //console.log(this.state.data)
-        });
-    }
-
-
     render() {
-
         return (
             <Dropdown>
-
                 <DropdownButton
                     id="dropdown-button"
                     title="Facilities"
                     variant="info"
                 >
                     {
-                        this.state.data.map((o, index) =>
+                        this.props.data.map((o, index) =>
                             <Dropdown.Item
                                 as="button"
                                 key={o.facility}
-                                eventKey={index}
-                                onSelect={(eventKey) => {
-                                    console.log(eventKey);
-                                    console.log(o);
-                                }}
+                                onSelect={() => this.props.onSelect(index)}
                             >
                                 {o.facility}
                             </Dropdown.Item>
@@ -96,18 +62,62 @@ class DropdownList extends React.Component{
                     }
 
                 </DropdownButton>
-
             </Dropdown>
         );
     }
 }
 
+class Phase1 extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            facilitySelected: -1,
+        };
+    }
 
-class App extends React.Component{
+    componentDidMount() {
+        facility.then(body => {
+            this.setState(body);
+        });
+    }
+
+    handleSelect(i) {
+        this.setState({
+            facilitySelected: i,
+        })
+    }
 
     render() {
         return (
-            <DropdownList />
+            <div className="phase1">
+                <div className="dropdown">
+                    <DropdownList
+                        data={this.state.data}
+                        onSelect={(i) => this.handleSelect(i)}
+                    />
+                </div>
+
+                <div className="datatable">
+                    <DataTable
+                        data={this.state.data}
+                        facilitySelected={this.state.facilitySelected}
+                    />
+                </div>
+
+            </div>
+        );
+
+    }
+}
+
+
+class App extends React.Component{
+    render() {
+        return (
+            <div className={"app"}>
+                <Phase1 />
+            </div>
         );
 
     }
