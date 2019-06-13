@@ -33,8 +33,24 @@
 }
 
 
-.datatable {
-  margin-top: 40px;
-  margin-left: 60px;
-  margin-right: 60px;
+.datatable, .output-table, .dropdown, .input-table{
+  margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
+}
+
+
+
+h1 {
+  text-align: center;
+}
+
+h5 {
+  color: dimgrey;
+  padding-bottom: 10px;
+}
+
+.phase2 {
+  margin-top: 100px;
 }
